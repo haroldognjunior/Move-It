@@ -103,3 +103,58 @@
     transform: rotate(0deg);
   }
 }
+
+.bodyRegistrarse {
+  height: 100vh;
+  .main {
+    .seccionRegistrarse {
+      width: 50%;
+      margin: 0 auto;
+      border-radius: 5px;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 90vh;
+      font-size: 1.2rem;
+      /*seleccionar todos los input menos el checkbox*/
+      form {
+        width: 100%;
+        padding: 40px;
+        input:not(.check, .boton),
+        select {
+          width: 100%;
+          margin-bottom: 20px;
+          height: 40px;
+          padding: 0px 20px;
+          font-size: 1.2rem;
+          border-radius: 20px;
+          outline: none;
+        }
+      }
+    }
+  }
+}
+
+/*media querys para mobile PAGINA registrarse*/
+@media (max-width: 900px) {
+  .bodyRegistrarse {
+    .main {
+      .seccionRegistrarse {
+        width: 100%;
+        form {
+          width: 100%;
+          text-align: center;
+
+          input:not(.check, .boton),
+          select {
+            width: 80%;
+            height: 35px;
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+}
