@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .action-buttons button {
+            margin-right: 10px; /* Espacio entre botones */
+        }
+    </style>
+    <script>
+        function fetchUsers() {
+            fetch('http://localhost:8080/backend/moveit/data')
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Datos recibidos:", data);
+                    if (data.trim()) {
+                        const users = data.trim().split("\n").map(line => {
+                            const parts = line.split(", ");
+                            if (parts.length === 3) {
+                                const [id, nombre, email] = parts;
+                                return { id, nombre, email };
+                            }
+                            return null;
+                        }).filter(user => user !== null);
+
+                        const tableBody = document.getElementById('usersTableBody');
+                        tableBody.innerHTML = '';
+                        users.forEach(user => {
+                            const row = document.createElement('tr');
+                            const idCell = document.createElement('td');
+                            const nombreCell = document.createElement('td');
+                            const emailCell = document.createElement('td');
+                            const actionsCell = document.createElement('td');
+                            actionsCell.className = 'action-buttons';
+
+                            const editButton = document.createElement('button');
+                            const deleteButton = document.createElement('button');
+
+                            idCell.textContent = user.id.split(": ")[1];
+                            nombreCell.textContent = user.nombre.split(": ")[1];
+                            emailCell.textContent = user.email.split(": ")[1];
+                            
+                            editButton.textContent = "Editar";
+                            editButton.onclick = () => {
+                                window.location.href = `http://localhost:8080/backend/editar_usuario.html?id=${user.id.split(": ")[1]}`;
+                            };
+
+                            deleteButton.textContent = "Borrar";
+                            deleteButton.onclick = () => {
+                                deleteUser(user.id.split(": ")[1]);
+                            };
+
+                            actionsCell.appendChild(editButton);
+                            actionsCell.appendChild(deleteButton);
+
+                            row.appendChild(idCell);
+                            row.appendChild(nombreCell);
+                            row.appendChild(emailCell);
+                            row.appendChild(actionsCell);
+                            tableBody.appendChild(row);
+                        });
+                    } else {
+                        console.error('Datos recibidos están vacíos o en un formato inesperado');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function deleteUser(userId) {
+            fetch(`http://localhost:8080/backend/moveit/deleteUser?id=${userId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                fetchUsers();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body onload="fetchUsers()">
+    <h2>Lista de Usuarios</h2>
+    <button onclick="window.location.href='http://localhost:8080/backend/formulario.html'">Agregar Usuario</button>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="usersTableBody">
+            <!-- Aquí se insertarán los datos de los usuarios -->
+        </tbody>
+    </table>
+</body>
+</html>

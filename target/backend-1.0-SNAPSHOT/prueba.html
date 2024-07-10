@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Aplicación Web</title>
+    <script>
+        // JavaScript para hacer la solicitud HTTP y actualizar la página
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/backend/moveit/hello')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('hello-message').innerText = data;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</head>
+<body>
+    <h1>Bienvenido a Mi Aplicación Web</h1>
+    <p id="hello-message">Cargando mensaje...</p>
+</body>
+</html>

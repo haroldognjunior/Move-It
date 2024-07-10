@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuario</title>
+    <script>
+        function getQueryParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function fetchUserData() {
+            const userId = getQueryParameter('id');
+            if (!userId) {
+                alert("ID de usuario no proporcionado en la URL");
+                return;
+            }
+
+            fetch(`http://localhost:8080/backend/moveit/getUser?id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        document.getElementById('id').value = data.id;
+                        document.getElementById('nombre').value = data.nombre;
+                        document.getElementById('email').value = data.email;
+                    } else {
+                        alert("Usuario no encontrado");
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function updateUser(event) {
+            event.preventDefault();
+            const userId = document.getElementById('id').value;
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+
+            fetch(`http://localhost:8080/backend/moveit/updateUser`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: userId, nombre: nombre, email: email })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+          if (data.includes("actualizado exitosamente")) {
+                    window.location.href = 'http://localhost:8080/backend/usuarios.html';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body onload="fetchUserData()">
+    <h2>Editar Usuario</h2>
+    <form onsubmit="updateUser(event)">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" readonly><br><br>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        <input type="submit" value="Actualizar">
+    </form>
+</body>
+</html>
