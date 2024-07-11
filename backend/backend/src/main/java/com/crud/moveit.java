@@ -21,7 +21,7 @@ public class moveit extends HttpServlet {
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/moveit";
     private static final String USER = "root";
-    private static final String PASS = "Nxt789V123";
+    private static final String PASS = "1234";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
